@@ -1,0 +1,19 @@
+{
+  "name": "Shoten - Your Personal Shop Manager",
+  "short_name": "Shoten",
+  "description": "Manage your shop, sales, stock and accounts with Shoten.",
+  "start_url": "./shoten-login.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#6c3ce8",
+  "icons": [
+    {
+      "src": "./shoten-lantern.png",
+      "sizes": "1254x1254",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

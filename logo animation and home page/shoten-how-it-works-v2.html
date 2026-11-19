@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shoten — you run the shop, let it keep count</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Caveat:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1A1A1E;
+    --paper: #F7E7CF;
+    --paper-raised: #FFFFFF;
+    --gold: #DD5F2C;
+    --teal: #2C7A67;
+    --rust: #B23A26;
+    --text-on-ink: #F3ECDF;
+    --text-on-paper: #201F1D;
+    --text-muted-ink: #A6A39A;
+    --text-muted-paper: #6B675F;
+    --rule-ink: rgba(243,236,223,0.14);
+    --rule-paper: rgba(32,31,29,0.14);
+    --serif: "Fraunces", Georgia, serif;
+    --sans: "IBM Plex Sans", -apple-system, "Segoe UI", Roboto, sans-serif;
+    --hand: "Caveat", cursive;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #211D17; --paper-raised: #2B2620; --ink: #141312;
+      --gold: #EC793F; --teal: #4AA38C; --rust: #D3583F;
+      --text-on-paper: #F3ECDF; --text-muted-ink: #ADA89B; --text-muted-paper: #B0AA9C;
+      --rule-ink: rgba(243,236,223,0.10); --rule-paper: rgba(243,236,223,0.12);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #211D17; --paper-raised: #2B2620; --ink: #141312;
+    --gold: #EC793F; --teal: #4AA38C; --rust: #D3583F;
+    --text-on-paper: #F3ECDF; --text-muted-ink: #ADA89B; --text-muted-paper: #B0AA9C;
+    --rule-ink: rgba(243,236,223,0.10); --rule-paper: rgba(243,236,223,0.12);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); scroll-padding-top: env(safe-area-inset-top,0px); }
+  body {
+    font-family: var(--sans);
+    color: var(--text-on-paper);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    background-image: radial-gradient(circle at 1px 1px, rgba(32,31,29,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { background-image: radial-gradient(circle at 1px 1px, rgba(243,236,223,0.04) 1px, transparent 0); }
+  }
+  h1, h2, h3 { font-family: var(--serif); font-weight: 500; letter-spacing: -0.01em; margin: 0; }
+  section { padding: 5rem 1.5rem; }
+  .wrap { max-width: 940px; margin: 0 auto; position: relative; }
+
+  /* ---------------- HERO ---------------- */
+  .hero { background: var(--ink); color: var(--text-on-ink); padding-top: calc(6rem + env(safe-area-inset-top,0px)); overflow: visible; }
+  .hero .wrap { max-width: 720px; }
+  .hero h1 { font-size: clamp(2.1rem, 6vw, 3.3rem); line-height: 1.1; max-width: 15ch; }
+  .hero h1 span { display: block; opacity: 0; filter: blur(6px); transform: translateY(10px); animation: lineIn 0.7s ease-out forwards; }
+  .hero h1 span:nth-child(2) { animation-delay: 0.16s; }
+  .hero p.sub { font-size: 1.12rem; color: var(--text-muted-ink); max-width: 40ch; margin-top: 1.2rem; opacity: 0; animation: lineIn 0.7s ease-out forwards; animation-delay: 0.4s; }
+  @keyframes lineIn { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero h1 span, .hero p.sub { animation: none; opacity: 1; filter: none; transform: none; }
+  }
+
+  .note {
+    font-family: var(--hand);
+    font-size: 1.4rem;
+    color: var(--gold);
+    margin-top: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    transform: rotate(-2deg);
+  }
+  .note svg { flex-shrink: 0; margin-top: 0.3rem; }
+
+  /* ---------------- FLOWCHART ---------------- */
+  .flow-section { background: var(--paper-raised); }
+  .flow-intro { max-width: 56ch; margin-bottom: 3rem; }
+  .flow-intro h2 { font-size: clamp(1.5rem, 3.4vw, 2rem); }
+  .flow-intro p { color: var(--text-muted-paper); margin-top: 0.6rem; }
+
+  .flow { position: relative; padding-left: 2.4rem; }
+  .flow::before {
+    content: "";
+    position: absolute;
+    left: 0.65rem;
+    top: 0.6rem;
+    bottom: 0.6rem;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--rule-paper) 0 6px, transparent 6px 12px);
+  }
+  .flow-node { position: relative; padding-bottom: 2.6rem; }
+  .flow-node:last-child { padding-bottom: 0; }
+  .flow-dot {
+    position: absolute; left: -2.4rem; top: 0.15rem;
+    width: 1.35rem; height: 1.35rem; border-radius: 50%;
+    background: var(--paper-raised); border: 2px solid var(--accent, var(--gold));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; color: var(--accent, var(--gold));
+  }
+  .flow-card {
+    background: var(--paper); border: 1px solid var(--rule-paper);
+    border-left: 3px solid var(--accent, var(--gold));
+    border-radius: 3px; padding: 1.1rem 1.3rem;
+  }
+  .flow-tag { font-size: 0.74rem; font-weight: 600; color: var(--accent, var(--gold)); margin-bottom: 0.3rem; }
+  .flow-card h3 { font-size: 1.08rem; font-weight: 500; margin-bottom: 0.4rem; }
+  .flow-card p { margin: 0; font-size: 0.94rem; color: var(--text-muted-paper); max-width: 40ch; }
+  .flow-arrow {
+    position: absolute; left: -1.85rem; top: 1.7rem;
+    color: var(--text-muted-paper); opacity: 0.6;
+  }
+  .flow-loop {
+    margin-top: 0.5rem; margin-left: -2.4rem;
+    padding: 0.9rem 1.3rem; border: 1px dashed var(--rule-paper); border-radius: 3px;
+    font-size: 0.9rem; color: var(--text-muted-paper); display: flex; align-items: center; gap: 0.6rem;
+  }
+  .flow-loop svg { flex-shrink: 0; color: var(--teal); }
+
+  @media (max-width: 640px) {
+    .flow { padding-left: 2.1rem; }
+    .flow-dot { left: -2.1rem; }
+    .flow-arrow { left: -1.6rem; }
+    .flow-loop { margin-left: -2.1rem; }
+  }
+
+  /* ---------------- STAGES ---------------- */
+  .stage-ink { background: var(--ink); color: var(--text-on-ink); }
+  .stage-paper { background: var(--paper); color: var(--text-on-paper); }
+  .stage-head { margin-bottom: 2.5rem; max-width: 50ch; }
+  .stage-name { font-family: var(--serif); font-size: 0.95rem; font-style: italic; color: var(--gold); margin-bottom: 0.4rem; }
+  .stage-head h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
+
+  /* ---------------- QUOTE ---------------- */
+  .quote-wrap { background: var(--paper-raised); }
+  .quote {
+    background: var(--paper);
+    border: 1px solid var(--rule-paper);
+    max-width: 480px;
+    padding: 1.8rem 2rem;
+    font-family: var(--hand);
+    font-size: 1.6rem;
+    line-height: 1.35;
+    transform: rotate(-1.4deg);
+    box-shadow: 0 16px 34px -20px rgba(0,0,0,0.35);
+  }
+  .quote cite { display: block; font-family: var(--sans); font-style: normal; font-size: 0.85rem; color: var(--text-muted-paper); margin-top: 1rem; font-weight: 600; }
+
+  /* ---------------- CLOSING ---------------- */
+  .closing { background: var(--ink); color: var(--text-on-ink); }
+  .closing h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); max-width: 18ch; }
+  .closing p { color: var(--text-muted-ink); margin-top: 1rem; max-width: 44ch; font-size: 1.05rem; }
+  footer { padding: 1.8rem 1.5rem calc(1.8rem + env(safe-area-inset-bottom,0px)); font-size: 0.85rem; color: var(--text-muted-ink); background: var(--ink); border-top: 1px solid var(--rule-ink); }
+</style>
+</head>
+<body>
+
+  <section class="hero">
+    <div class="wrap">
+      <h1><span>You run the shop.</span><span>Let it keep count.</span></h1>
+      <p class="sub">Ever closed up at night not quite sure if it was a good day? Shoten watches the stock and the sales while you're busy with the actual shop, then does the math for you.</p>
+      <div class="note">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M4 4C10 8 12 14 9 21M9 21L4.5 17.5M9 21L13 17" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>here's exactly how it flows</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="flow-section">
+    <div class="wrap">
+      <div class="flow-intro">
+        <h2>From a single sale to a better decision</h2>
+        <p>Everything Shoten does is one connected loop. Here's what happens, step by step, from the moment something sells to the moment you act on it.</p>
+      </div>
+
+      <div class="flow">
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--gold)">1</div>
+          <div class="flow-card" style="--accent: var(--gold)">
+            <div class="flow-tag">sales entry</div>
+            <h3>A sale happens</h3>
+            <p>You ring up a sale like normal — an item, a quantity, a price. That one action is all Shoten needs to get to work.</p>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--teal)">2</div>
+          <div class="flow-card" style="--accent: var(--teal)">
+            <div class="flow-tag">database management</div>
+            <h3>It's saved automatically</h3>
+            <p>The transaction is written straight into Shoten's database — no notebook, no end-of-day retyping, nothing to lose.</p>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--rust)">3</div>
+          <div class="flow-card" style="--accent: var(--rust)">
+            <div class="flow-tag">stock management</div>
+            <h3>Stock updates itself</h3>
+            <p>That product's quantity drops in real time, and anything running low gets flagged before the shelf is actually empty.</p>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--gold)">4</div>
+          <div class="flow-card" style="--accent: var(--gold)">
+            <div class="flow-tag">sales tracking</div>
+            <h3>The numbers build up</h3>
+            <p>That sale joins the running total — daily, weekly, and monthly — without anyone having to add it up by hand.</p>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--teal)">5</div>
+          <div class="flow-card" style="--accent: var(--teal)">
+            <div class="flow-tag">business analytics</div>
+            <h3>Patterns turn into plain language</h3>
+            <p>All that stored data gets turned into simple insight — what's selling, what isn't, and what changed since last week.</p>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--rust)">6</div>
+          <div class="flow-card" style="--accent: var(--rust)">
+            <div class="flow-tag">AI assistance</div>
+            <h3>Shoten flags what matters</h3>
+            <p>A suggestion surfaces on its own — reorder this, watch that — instead of you having to go digging for it.</p>
+          </div>
+        </div>
+
+        <div class="flow-node">
+          <div class="flow-dot" style="--accent: var(--gold)">7</div>
+          <div class="flow-card" style="--accent: var(--gold)">
+            <div class="flow-tag">better decisions</div>
+            <h3>You make the call</h3>
+            <p>Restock, reprice, plan tomorrow's order — based on what actually happened in the shop, not a guess.</p>
+          </div>
+
+          <div class="flow-loop">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M14 4.5C12.5 2.7 10.4 1.5 8 1.5C3.9 1.5 0.7 4.9 1 9C1.3 12.7 4.5 15.5 8.2 15.5C11.5 15.5 14.3 13.2 15 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M15.5 5.5L14 4.3L12.7 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>and it all starts over with the next sale — no manual re-entry, ever.</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="quote-wrap">
+    <div class="wrap">
+      <div class="quote">
+        "I used to close the store not knowing if I'd actually made money that day. Now I just... know."
+        <cite>— a sari-sari store owner, three weeks into using Shoten</cite>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing">
+    <div class="wrap">
+      <h2>Everyday shop data, turned into something useful.</h2>
+      <p>That's Shoten — for shop owners who'd rather understand the business than do its paperwork.</p>
+    </div>
+  </section>
+
+  <footer><div class="wrap">Shoten</div></footer>
+
+
+</body>
+</html>
