@@ -1,0 +1,23 @@
+{
+  "short_name": "Shoten",
+  "name": "Shoten - Personal Shop Manager",
+  "icons": [
+    {
+      "src": "/shoten-logo-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/shoten-logo-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "display": "standalone",
+  "orientation": "portrait"
+}
