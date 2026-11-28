@@ -550,16 +550,7 @@ let authChecked = false;
 let pendingAfterSplash = false;
 
 function handleAfterSplash() {
-  if (!authChecked) {
-    pendingAfterSplash = true;
-    return;
-  }
-
-  if (currentUser) {
-    window.location.replace("./shoten.html");
-  } else {
-    app.classList.add('in');
-  }
+app.classList.add('in');
 }
 
 function playEntrance() {
