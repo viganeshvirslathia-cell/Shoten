@@ -553,22 +553,98 @@ function handleAfterSplash() {
     if (currentUser) {
     window.location.replace("Shoten.html");
   } else {
-    app.classList.add('in');
+<script>
+  const splash = document.getElementById('splash');
+  const app = document.getElementById('app');
+  const replayBtn = document.getElementById('replayBtn');
+
+  let currentUser = null;
+  let authChecked = false;
+  let pendingAfterSplash = false;
+
+  function handleAfterSplash() {
+    if (!authChecked) {
+      pendingAfterSplash = true;
+      return;
+    }
+
+    if (currentUser) {
+      window.location.replace("Shoten.html");
+    } else {
+      app.classList.add('in');
+    }
   }
 
+  function playEntrance() {
+    splash.classList.remove('fade-out', 'open', 'shatter');
+    app.classList.remove('in');
+    replayBtn.classList.remove('show');
+    window.scrollTo(0, 0);
+    void splash.offsetWidth;
 
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  authChecked = true;
-  if (pendingAfterSplash) {
-    pendingAfterSplash = false;
-    handleAfterSplash();
+    const frame = splash.querySelector('.splash-logo-frame');
+    const img = splash.querySelector('.splash-logo-frame img');
+    const tag = splash.querySelector('.splash-tag');
+    const status = splash.querySelector('.splash-status');
+    const orbs = splash.querySelectorAll('.orb');
+    const slashes = splash.querySelectorAll('.slash');
+    const shards = splash.querySelectorAll('.logo-shard');
+    const resettable = [frame, img, tag, status, ...orbs, ...slashes, ...shards];
+    resettable.forEach(el => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+
+    const paintShards = () => {
+      shards.forEach(s => {
+        s.style.backgroundImage = `url(${img.src})`;
+        s.style.backgroundSize = 'cover';
+        s.style.backgroundPosition = '50% 35%';
+      });
+    };
+    if (img.complete) paintShards();
+    else img.addEventListener('load', paintShards, { once: true });
+
+    setTimeout(() => { splash.classList.add('shatter'); }, 2400);
+    setTimeout(() => { splash.classList.add('open'); }, 3400);
+    setTimeout(() => { app.classList.add('in'); }, 3500);
+    setTimeout(() => {
+      splash.classList.add('fade-out');
+      handleAfterSplash();
+      setTimeout(() => replayBtn.classList.add('show'), 500);
+    }, 4550);
   }
-});
 
   playEntrance();
   replayBtn.addEventListener('click', playEntrance);
 </script>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD_XAHQG-Pp4cNsMf1Edj00DwOMDOW_Nps",
+    authDomain: "shoten-72c98.firebaseapp.com",
+    projectId: "shoten-72c98",
+    storageBucket: "shoten-72c98.firebasestorage.app",
+    messagingSenderId: "127926934219",
+    appId: "1:127926934219:web:e9c8b1a1c2937b9422994e",
+    measurementId: "G-HBNSDYZY04"
+  };
+
+  const firebaseApp = initializeApp(firebaseConfig);
+  const auth = getAuth(firebaseApp);
+
+  onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    authChecked = true;
+    if (pendingAfterSplash) {
+      pendingAfterSplash = false;
+      handleAfterSplash();
+    }
+  });
+</script>
 </body>
 </html>
