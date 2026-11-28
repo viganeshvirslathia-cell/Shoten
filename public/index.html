@@ -87,6 +87,11 @@
     animation: logoIn 0.7s cubic-bezier(.2,.8,.2,1) forwards 0.9s;
     position: relative; z-index: 3;
   }
+    #splash.shatter .splash-logo-frame{
+    opacity: 0;
+    transition: opacity 0.08s ease;
+  }
+
   @keyframes logoIn{ to{ opacity:1; transform: scale(1) translateY(0); } }
   .splash-logo-frame img{
     width: 100%;
@@ -131,24 +136,65 @@
 
   /* ---- Slash marks + shatter into pieces ---- */
   .slash{
-    position: absolute; top: calc(50% - 84px); left: 50%;
-    width: 260px; height: 5px;
-    background: linear-gradient(90deg, transparent, #fff 45%, #fff 55%, transparent);
-    box-shadow: 0 0 14px 2px rgba(255,255,255,0.9);
-    opacity: 0; z-index: 6; pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    height: 7px;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255,255,255,0.95) 32%,
+      #ffffff 50%,
+      rgba(255,255,255,0.95) 68%,
+      transparent 100%
+    );
+    box-shadow:
+      0 0 12px rgba(255,255,255,0.95),
+      0 0 24px rgba(232,86,44,0.65);
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none;
   }
-  #splash.shatter .slash1{ animation: slash1Sweep 0.4s ease-out forwards; }
-  #splash.shatter .slash2{ animation: slash2Sweep 0.4s ease-out 0.1s forwards; }
-  #splash.shatter .slash3{ animation: slash3Sweep 0.4s ease-out 0.2s forwards; }
-  @keyframes slash1Sweep{ 0%{ opacity:0; transform: translate(-50%,-50%) rotate(20deg) scaleX(0); } 40%{ opacity:1; } 100%{ opacity:0; transform: translate(-50%,-50%) rotate(20deg) scaleX(1.4); } }
-  @keyframes slash2Sweep{ 0%{ opacity:0; transform: translate(-50%,-50%) rotate(-25deg) scaleX(0); } 40%{ opacity:1; } 100%{ opacity:0; transform: translate(-50%,-50%) rotate(-25deg) scaleX(1.4); } }
-  @keyframes slash3Sweep{ 0%{ opacity:0; transform: translate(-50%,-50%) rotate(72deg) scaleX(0); } 40%{ opacity:1; } 100%{ opacity:0; transform: translate(-50%,-50%) rotate(72deg) scaleX(1.4); } }
+
+  #splash.shatter .slash1{ animation: slash1Sweep 0.65s cubic-bezier(.16,.84,.44,1) forwards; }
+  #splash.shatter .slash2{ animation: slash2Sweep 0.65s cubic-bezier(.16,.84,.44,1) 0.12s forwards; }
+  #splash.shatter .slash3{ animation: slash3Sweep 0.65s cubic-bezier(.16,.84,.44,1) 0.24s forwards; }
+
+  @keyframes slash1Sweep{
+    0%{ opacity: 0; transform: translate(-50%,-50%) rotate(22deg) scaleX(0.1); }
+    25%{ opacity: 1; }
+    75%{ opacity: 1; }
+    100%{ opacity: 0; transform: translate(-50%,-50%) rotate(22deg) scaleX(1.35); }
+  }
+
+  @keyframes slash2Sweep{
+    0%{ opacity: 0; transform: translate(-50%,-50%) rotate(-26deg) scaleX(0.1); }
+    25%{ opacity: 1; }
+    75%{ opacity: 1; }
+    100%{ opacity: 0; transform: translate(-50%,-50%) rotate(-26deg) scaleX(1.35); }
+  }
+
+  @keyframes slash3Sweep{
+    0%{ opacity: 0; transform: translate(-50%,-50%) rotate(72deg) scaleX(0.1); }
+    25%{ opacity: 1; }
+    75%{ opacity: 1; }
+    100%{ opacity: 0; transform: translate(-50%,-50%) rotate(72deg) scaleX(1.35); }
+  }
 
   .logo-shard{
-    position: absolute; top: calc(50% - 84px); left: 50%;
-    width: 168px; height: 168px; border-radius: 28px;
-    overflow: hidden; transform: translate(-50%,-50%);
-    opacity: 0; z-index: 4; pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 28px;
+    overflow: hidden;
+    transform: translate(-50%,-50%);
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
   }
   .shard-tl{ clip-path: polygon(0 0, 50% 0, 50% 50%, 0 50%); }
   .shard-tr{ clip-path: polygon(50% 0, 100% 0, 100% 50%, 50% 50%); }
